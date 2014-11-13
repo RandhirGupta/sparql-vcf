@@ -1,15 +1,14 @@
 package ch.isbsib.sparql.bed;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import org.broad.tribble.AbstractFeatureReader;
-import org.broad.tribble.Feature;
-import org.broad.tribble.bed.BEDCodec;
+import htsjdk.samtools.util.CloseableIterator;
+import htsjdk.variant.variantcontext.VariantContext;
+import htsjdk.variant.vcf.VCFFileReader;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -24,39 +23,52 @@ class BindingReaderRunner implements Runnable {
 	private static final Logger log = LoggerFactory
 			.getLogger(BindingReaderRunner.class);
 	private final BlockingQueue<BindingSet> queue;
-	private final AbstractFeatureReader reader;
+	private final VCFFileReader reader;
 	volatile boolean done = false;
 	private final File bedFile;
 	private final ValueFactory vf;
 	private final StatementPattern left;
 	private final StatementPattern right;
 
-	public BindingReaderRunner(File bedFile, BlockingQueue<BindingSet> queue,
+	public BindingReaderRunner(File vcfFile, File vcfIndex,  BlockingQueue<BindingSet> queue,
 			StatementPattern left, StatementPattern right, ValueFactory vf,
 			BindingSet binding) {
 		this.vf = vf;
 
-		this.reader = AbstractFeatureReader.getFeatureReader(
-				bedFile.getAbsolutePath(), new BEDCodec(), false);
+        this.reader = new VCFFileReader(vcfFile.getAbsoluteFile(), vcfIndex.getAbsoluteFile(), true);
+//		this.reader = vcfReader.AbstractFeatureReader.getFeatureReader(
+//				bedFile.getAbsolutePath(), new BEDCodec(), false);
 		this.left = left;
 		this.right = right;
 		this.queue = queue;
-		this.bedFile = bedFile;
+		this.bedFile = vcfFile;
 	}
 
 	@Override
 	public void run() {
 		long lineNo = 0;
-		String filePath = "file:///" + bedFile.getAbsolutePath();
-		Iterable<Feature> iter;
+//		String filePath = "file:///" + bedFile.getAbsolutePath();
+		CloseableIterator<VariantContext> iter;
 		try {
 			
-			BEDToTripleConverter conv = new BEDToTripleConverter(vf,
+			VCFToTripleConverter conv = new VCFToTripleConverter(vf,
 					 findKnownPredicates());
+
+            left.getPredicateVar();
+
+//            reader.query()
 			iter = reader.iterator();
-			for (Feature feature : iter) {
-				List<Statement> statements = conv.convertLineToTriples(
-						filePath, feature, lineNo++);
+
+            while (iter.hasNext()) {
+
+                VariantContext feature = iter.next();
+//				List<Statement> statements = conv.convertLineToTriples(
+//						filePath, feature, lineNo++);
+//
+                List<Statement> statements = conv.convertFeatureToTriples(
+                        feature
+                );
+
 				List<BindingSet> bindings = new ArrayList<BindingSet>();
 				filter(statements, left.getPredicateVar().getValue(), right
 						.getPredicateVar().getValue());
@@ -69,14 +81,9 @@ class BindingReaderRunner implements Runnable {
 					Thread.interrupted();
 				}
 			}
-		} catch (IOException e) {
-			log.error("IO error while reading bed file", e);
+            iter.close();
 		} finally {
-			try {
 				reader.close();
-			} catch (IOException e) {
-				log.error("IO error while closing bed file", e);
-			}
 			done = true;
 		}
 	}

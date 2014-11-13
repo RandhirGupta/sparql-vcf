@@ -16,7 +16,7 @@ import org.openrdf.query.algebra.evaluation.impl.EvaluationStrategyImpl;
 
 public class OneLineAwareEvaluationStrategy extends EvaluationStrategyImpl {
 
-	public OneLineAwareEvaluationStrategy(BEDTripleSource tripleSource) {
+	public OneLineAwareEvaluationStrategy(VCFTripleSource tripleSource) {
 		super(tripleSource);
 	}
 
@@ -24,7 +24,7 @@ public class OneLineAwareEvaluationStrategy extends EvaluationStrategyImpl {
 	public CloseableIteration<BindingSet, QueryEvaluationException> evaluate(
 			Join join, BindingSet bindings) throws QueryEvaluationException {
 		if (oneLine(join)) {
-			return ((BEDTripleSource) tripleSource).getStatements(bindings,
+			return ((VCFTripleSource) tripleSource).getStatements(bindings,
 					join);
 		} else
 			return super.evaluate(join, bindings);

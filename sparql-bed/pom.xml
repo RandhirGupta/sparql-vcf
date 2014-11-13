@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>ch.isb-sib</groupId>
-	<artifactId>sparql-bed</artifactId>
+	<artifactId>sparql-vcf</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>sparql-bed</name>
-	<url>http://github.com/jerven/sparql-bed</url>
+	<name>sparql-vcf</name>
+	<url>http://github.com/simonjupp/sparql-vcf</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -107,31 +107,31 @@
 				<executions>
 					<execution>
 						<id>default-cli</id>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.openrdf.sesame</groupId>
-									<artifactId>sesame-http-workbench</artifactId>
-									<version>${sesame.version}</version>
-									<type>war</type>
-									<overWrite>true</overWrite>
-									<destFileName>openrdf-sesame-webapp.war</destFileName>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.openrdf.sesame</groupId>
-									<artifactId>sesame-http-server</artifactId>
-									<version>${sesame.version}</version>
-									<type>war</type>
-									<overWrite>true</overWrite>
-									<destFileName>openrdf-sesame-server.war</destFileName>
-								</artifactItem>
-							</artifactItems>
-							<outputDirectory>
-								${project.build.directory}
-							</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-						</configuration>
+						<!--<configuration>-->
+							<!--<artifactItems>-->
+								<!--<artifactItem>-->
+									<!--<groupId>org.openrdf.sesame</groupId>-->
+									<!--<artifactId>sesame-http-workbench</artifactId>-->
+									<!--<version>${sesame.version}</version>-->
+									<!--<type>war</type>-->
+									<!--<overWrite>true</overWrite>-->
+									<!--<destFileName>openrdf-sesame-webapp.war</destFileName>-->
+								<!--</artifactItem>-->
+								<!--<artifactItem>-->
+									<!--<groupId>org.openrdf.sesame</groupId>-->
+									<!--<artifactId>sesame-http-server</artifactId>-->
+									<!--<version>${sesame.version}</version>-->
+									<!--<type>war</type>-->
+									<!--<overWrite>true</overWrite>-->
+									<!--<destFileName>openrdf-sesame-server.war</destFileName>-->
+								<!--</artifactItem>-->
+							<!--</artifactItems>-->
+							<!--<outputDirectory>-->
+								<!--${project.build.directory}-->
+							<!--</outputDirectory>-->
+							<!--<overWriteReleases>true</overWriteReleases>-->
+							<!--<overWriteSnapshots>true</overWriteSnapshots>-->
+						<!--</configuration>-->
 					</execution>
 				</executions>
 			</plugin>
@@ -213,23 +213,43 @@
 			<artifactId>sesame-queryresultio-sparqljson</artifactId>
 			<version>${sesame.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.utgenome.thirdparty</groupId>
-			<artifactId>picard</artifactId>
-			<version>1.86.0</version>
-		</dependency>
+
+        <!-- downloaded from http://broadinstitute.github.io/picard/ -->
+        <dependency>
+            <groupId>org.htsjdk</groupId>
+            <artifactId>htsjdk</artifactId>
+            <version>1.119</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bzip2</groupId>
+            <artifactId>bzip2</artifactId>
+            <version>1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>apache-jena-libs</artifactId>
+            <version>2.12.0</version>
+            <type>pom</type>
+        </dependency>
+
+        <!--<dependency>-->
+			<!--<groupId>org.utgenome.thirdparty</groupId>-->
+			<!--<artifactId>picard</artifactId>-->
+			<!--<version>1.86.0</version>-->
+		<!--</dependency>-->
 	</dependencies>
 	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<configuration>
-					<configLocation>config/sun_checks.xml</configLocation>
-				</configuration>
-			</plugin>
+		<!--<plugins>-->
+			<!--<plugin>-->
+				<!--<groupId>org.apache.maven.plugins</groupId>-->
+				<!--<artifactId>maven-checkstyle-plugin</artifactId>-->
+				<!--<configuration>-->
+					<!--<configLocation>config/sun_checks.xml</configLocation>-->
+				<!--</configuration>-->
+			<!--</plugin>-->
 
-		</plugins>
+		<!--</plugins>-->
 
 	</reporting>
 

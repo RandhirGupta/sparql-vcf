@@ -27,12 +27,12 @@ public class CLI {
 	public static void main(String[] args) throws MalformedQueryException,
 			RepositoryException, QueryEvaluationException, SailException,
 			RDFHandlerException, IOException, TupleQueryResultHandlerException {
-		BEDFileStore rep = new BEDFileStore();
+		VCFFileStore rep = new VCFFileStore();
 		File dataDir = mkTempDir();	
-		System.out.println("Query is" + args[1]);
+		System.out.println("Query is" + args[2]);
 		try {
 			rep.setDataDir(dataDir);
-			rep.setSamFile(new File(args[0]));
+			rep.setSamFile(new File(args[0]), new File(args[1]));
 			rep.setValueFactory(new ValueFactoryImpl());
 			SailRepository sr = new SailRepository(rep);
 			rep.initialize();
