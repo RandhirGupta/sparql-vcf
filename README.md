@@ -7,7 +7,7 @@ Implementation 1. is based on Jerven's sparql-bed (https://github.com/JervenBoll
 
 Implementation 2. is something I wrote with Jena to find out how property functions work. The idea here is that for a specific use-case, like querying for variants by chromomse coordiantes in a VCF file, we can introduce a special property that executes some code to run the query. The idea would be a hybrid approach to "on-the-fly" where you have most of the triples in a regular triple store, but the special predicates is used to optimize queries similar to how existing triple stores support lucene search. Not entirely sure this is the best approach, but it was fun playing wih it.  
 
-Example query
+Example query get all variants on chromsome Y in range 2600000:2700000
 
 ~~~
 
